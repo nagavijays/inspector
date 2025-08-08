@@ -1,11 +1,7 @@
 import { render, waitFor } from "@testing-library/react";
 import App from "../App";
 import { DEFAULT_INSPECTOR_CONFIG } from "../lib/constants";
-import { Inspecto    mockGetMCPProxyAuthToken.mockReturnValue({
-      token: "test-proxy-token", 
-      header: "X-Custom-Auth",
-      prefix: "Bearer ",
-    });fig } from "../lib/configurationTypes";
+import { InspectorConfig } from "../lib/configurationTypes";
 import * as configUtils from "../utils/configUtils";
 
 // Mock auth dependencies first
