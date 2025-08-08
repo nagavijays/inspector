@@ -95,6 +95,8 @@ const serverTransports: Map<string, Transport> = new Map<string, Transport>(); /
 const sessionToken =
   process.env.MCP_PROXY_AUTH_TOKEN || randomBytes(32).toString("hex");
 const authDisabled = !!process.env.DANGEROUSLY_OMIT_AUTH;
+const DEFAULT_AUTH_PREFIX = "Bearer ";
+const authPrefix = process.env.MCP_PROXY_AUTH_PREFIX || DEFAULT_AUTH_PREFIX;
 
 // Origin validation middleware to prevent DNS rebinding attacks
 const originValidationMiddleware = (
@@ -145,12 +147,21 @@ const authMiddleware = (
     ? authHeader[0]
     : authHeader;
 
-  if (!authHeaderValue || !authHeaderValue.startsWith("Bearer ")) {
+  if (!authHeaderValue) {
     sendUnauthorized();
     return;
   }
 
-  const providedToken = authHeaderValue.substring(7); // Remove 'Bearer ' prefix
+  let providedToken = authHeaderValue;
+  // Only strip prefix if it's configured and present
+  if (authPrefix && authHeaderValue.startsWith(authPrefix)) {
+    providedToken = authHeaderValue.substring(authPrefix.length);
+  } else if (authPrefix) {
+    // If prefix is expected but not found, reject
+    sendUnauthorized();
+    return;
+  }
+  
   const expectedToken = sessionToken;
 
   // Convert to buffers for timing-safe comparison
@@ -540,8 +551,12 @@ const server = app.listen(PORT, HOST);
 server.on("listening", () => {
   console.log(`⚙️ Proxy server listening on ${HOST}:${PORT}`);
   if (!authDisabled) {
+    const prefixInfo = authPrefix 
+      ? `\n   Auth prefix: "${authPrefix}" (Set MCP_PROXY_AUTH_PREFIX to change)` 
+      : "\n   No auth prefix required (Set MCP_PROXY_AUTH_PREFIX to add one)";
+    
     console.log(
-      `🔑 Session token: ${sessionToken}\n   ` +
+      `🔑 Session token: ${sessionToken}${prefixInfo}\n   ` +
         `Use this token to authenticate requests or set DANGEROUSLY_OMIT_AUTH=true to disable auth`,
     );
   } else {

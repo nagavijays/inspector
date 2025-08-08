@@ -66,4 +66,11 @@ export const DEFAULT_INSPECTOR_CONFIG: InspectorConfig = {
     value: "",
     is_session_item: true,
   },
+  MCP_PROXY_AUTH_PREFIX: {
+    label: "Proxy Auth Prefix",
+    description:
+      "Authentication prefix for the proxy server. Default is 'Bearer ' (with space). Set to empty to use no prefix.",
+    value: "Bearer ",
+    is_session_item: true,
+  },
 } as const;

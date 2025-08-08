@@ -48,10 +48,12 @@ export const getMCPProxyAuthToken = (
 ): {
   token: string;
   header: string;
+  prefix: string;
 } => {
   return {
     token: config.MCP_PROXY_AUTH_TOKEN.value as string,
     header: "X-MCP-Proxy-Auth",
+    prefix: config.MCP_PROXY_AUTH_PREFIX?.value as string || "Bearer ",
   };
 };
 

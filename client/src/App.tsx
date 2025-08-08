@@ -439,10 +439,10 @@ const App = () => {
 
   useEffect(() => {
     const headers: HeadersInit = {};
-    const { token: proxyAuthToken, header: proxyAuthTokenHeader } =
+    const { token: proxyAuthToken, header: proxyAuthTokenHeader, prefix: proxyAuthPrefix } =
       getMCPProxyAuthToken(config);
     if (proxyAuthToken) {
-      headers[proxyAuthTokenHeader] = `Bearer ${proxyAuthToken}`;
+      headers[proxyAuthTokenHeader] = `${proxyAuthPrefix}${proxyAuthToken}`;
     }
 
     fetch(`${getMCPProxyAddress(config)}/config`, { headers })

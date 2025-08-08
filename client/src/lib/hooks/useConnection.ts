@@ -375,11 +375,11 @@ export function useConnection({
       }
 
       // Add proxy authentication
-      const { token: proxyAuthToken, header: proxyAuthTokenHeader } =
+      const { token: proxyAuthToken, header: proxyAuthTokenHeader, prefix: proxyAuthPrefix } =
         getMCPProxyAuthToken(config);
       const proxyHeaders: HeadersInit = {};
       if (proxyAuthToken) {
-        proxyHeaders[proxyAuthTokenHeader] = `Bearer ${proxyAuthToken}`;
+        proxyHeaders[proxyAuthTokenHeader] = `${proxyAuthPrefix}${proxyAuthToken}`;
       }
 
       // Create appropriate transport

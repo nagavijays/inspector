@@ -90,6 +90,20 @@ jest.mock("../../auth", () => ({
   saveClientInformationToSessionStorage: jest.fn(),
 }));
 
+// Mock the config utils
+jest.mock("@/utils/configUtils", () => ({
+  ...jest.requireActual("@/utils/configUtils"),
+  getMCPProxyAddress: jest.fn(() => "http://localhost:6277"),
+  getMCPProxyAuthToken: jest.fn(() => ({
+    token: "test-proxy-token",
+    header: "X-MCP-Proxy-Auth",
+    prefix: "Bearer ",
+  })),
+  getMCPServerRequestTimeout: jest.fn(() => 10000),
+  getMCPServerRequestMaxTotalTimeout: jest.fn(() => 60000),
+  resetRequestTimeoutOnProgress: jest.fn(() => true),
+}));
+
 describe("useConnection", () => {
   const defaultProps = {
     transportType: "sse" as const,

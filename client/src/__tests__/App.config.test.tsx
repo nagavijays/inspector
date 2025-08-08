@@ -1,7 +1,11 @@
 import { render, waitFor } from "@testing-library/react";
 import App from "../App";
 import { DEFAULT_INSPECTOR_CONFIG } from "../lib/constants";
-import { InspectorConfig } from "../lib/configurationTypes";
+import { Inspecto    mockGetMCPProxyAuthToken.mockReturnValue({
+      token: "test-proxy-token", 
+      header: "X-Custom-Auth",
+      prefix: "Bearer ",
+    });fig } from "../lib/configurationTypes";
 import * as configUtils from "../utils/configUtils";
 
 // Mock auth dependencies first
@@ -28,6 +32,7 @@ jest.mock("../utils/configUtils", () => ({
   getMCPProxyAuthToken: jest.fn((config: InspectorConfig) => ({
     token: config.MCP_PROXY_AUTH_TOKEN.value,
     header: "X-MCP-Proxy-Auth",
+    prefix: config.MCP_PROXY_AUTH_PREFIX?.value || "Bearer ",
   })),
   getInitialTransportType: jest.fn(() => "stdio"),
   getInitialSseUrl: jest.fn(() => "http://localhost:3001/sse"),
@@ -98,6 +103,7 @@ describe("App - Config Endpoint", () => {
     mockGetMCPProxyAuthToken.mockImplementation((config: InspectorConfig) => ({
       token: config.MCP_PROXY_AUTH_TOKEN.value,
       header: "X-MCP-Proxy-Auth",
+      prefix: config.MCP_PROXY_AUTH_PREFIX?.value || "Bearer ",
     }));
   });
 
@@ -164,6 +170,7 @@ describe("App - Config Endpoint", () => {
     mockGetMCPProxyAuthToken.mockReturnValue({
       token: "test-proxy-token",
       header: "X-Custom-Auth",
+      prefix: "Bearer ",
     });
     mockInitializeInspectorConfig.mockReturnValue(mockConfig);
 

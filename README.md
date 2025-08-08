@@ -143,12 +143,13 @@ The MCP Inspector proxy server requires authentication by default. When starting
 
 ```
 🔑 Session token: 3a1c267fad21f7150b7d624c160b7f09b0b8c4f623c7107bbf13378f051538d4
+   Auth prefix: "Bearer " (Set MCP_PROXY_AUTH_PREFIX to change)
 
 🔗 Open inspector with token pre-filled:
    http://localhost:6274/?MCP_PROXY_AUTH_TOKEN=3a1c267fad21f7150b7d624c160b7f09b0b8c4f623c7107bbf13378f051538d4
 ```
 
-This token must be included as a Bearer token in the Authorization header for all requests to the server. The inspector will automatically open your browser with the token pre-filled in the URL.
+This token must be included in the `x-mcp-proxy-auth` header for all requests to the server. By default, the token must be prefixed with "Bearer " (note the space), but this prefix can be configured using the `MCP_PROXY_AUTH_PREFIX` environment variable. The inspector will automatically open your browser with the token pre-filled in the URL.
 
 **Automatic browser opening** - The inspector now automatically opens your browser with the token pre-filled in the URL when authentication is enabled.
 
@@ -170,6 +171,14 @@ You can also set the token via the `MCP_PROXY_AUTH_TOKEN` environment variable w
 
 ```bash
 MCP_PROXY_AUTH_TOKEN=$(openssl rand -hex 32) npm start
+```
+
+You can configure the authentication prefix using the `MCP_PROXY_AUTH_PREFIX` environment variable:
+
+```bash
+# Default is "Bearer " (with space)
+MCP_PROXY_AUTH_PREFIX="Token " npm start  # Use "Token " prefix
+MCP_PROXY_AUTH_PREFIX="" npm start        # No prefix required
 ```
 
 #### Local-only Binding
